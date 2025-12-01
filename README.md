@@ -20,6 +20,7 @@ Projeto-Sockets/
 │   └── client_notfound.py
 │
 ├── documentos/
+│   ├── fluxograma.pdf
 │   ├── relatorio.pdf
 │   └── diagrama_uml.pdf
 │
@@ -197,3 +198,4 @@ A arquitetura criada segue rigor acadêmico e pode ser utilizada como base para 
 **Autor:** *Rafael Moura*
 
 **Ano:** 2025
+
