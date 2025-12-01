@@ -1,3 +1,4 @@
+
 """
 Servidor de Nomes (Service Name Server)
 ---------------------------------------
@@ -50,25 +51,49 @@ O servidor permanecerá ativo aguardando conexões e exibindo no terminal
 cada registro e cada consulta recebida.
 """
 __version__ = "1.0.0"
-__author__ = "Rafael Silva Moura"
+__author__ = "Rafael Silva Moura"   
 
 from socket import AF_INET, SOCK_STREAM, socket
 
-services = {}   # dicionário com: nome -> (ip, porta)
+
+# ================================
+# ANSI COLORS
+# ================================
+RESET   = "\033[0m"
+BOLD    = "\033[1m"
+
+RED     = "\033[31m"
+GREEN   = "\033[32m"
+YELLOW  = "\033[33m"
+BLUE    = "\033[34m"
+MAGENTA = "\033[35m"
+CYAN    = "\033[36m"
+WHITE   = "\033[37m"
+
+# Estilos especiais
+OK      = GREEN + "✔" + RESET
+INFO    = CYAN + "ℹ" + RESET
+ERROR   = RED + "✖" + RESET
+
+
+# ================================
+# Servidor de Nomes
+# ================================
+services = {}   # dicionário: nome -> (ip, porta)
 
 server_port = socket(AF_INET, SOCK_STREAM)
 server_port.bind(("localhost", 7777))
 server_port.listen(5)
 
-print("Servidor de Nomes iniciado na porta 7777")
+print(f"{BOLD}{CYAN}Servidor de Nomes iniciado na porta 7777{RESET}\n")
 
 while True:
     client_socket, client_addr = server_port.accept()
-    print(f"Conexão recebida de {client_addr}")
+    print(f"{BLUE}Conexão recebida de {client_addr}{RESET}")
 
     # Recebe a mensagem
     mensagem = client_socket.recv(1024).decode().strip()
-    print("Recebido:", mensagem)
+    print(f"{YELLOW}Mensagem recebida:{RESET} {mensagem}")
 
     partes = mensagem.split()
 
@@ -83,9 +108,9 @@ while True:
         # Só adiciona se ainda não existe
         if nome not in services:
             services[nome] = (ip, porta)
-            print(f"✔ Serviço registrado: {nome} -> {ip}:{porta}")
+            print(f"{OK} {GREEN}Serviço registrado:{RESET} {nome} -> {ip}:{porta}")
         else:
-            print(f"ℹ Serviço '{nome}' já estava registrado.")
+            print(f"{INFO} Serviço '{nome}' já existia, mantendo registro.")
 
         client_socket.send("OK".encode())
 
@@ -98,8 +123,10 @@ while True:
         if nome in services:
             ip, porta = services[nome]
             resposta = f"{ip} {porta}"
+            print(f"{INFO} Consulta para '{nome}': enviando {resposta}")
         else:
             resposta = "NOT_FOUND"
+            print(f"{ERROR} Serviço '{nome}' não encontrado!")
 
         client_socket.send(resposta.encode())
 
@@ -107,7 +134,9 @@ while True:
     # 3) QUALQUER OUTRA COISA
     # ---------------------------------------------------
     else:
+        print(f"{ERROR} Entrada inválida recebida.")
         client_socket.send("ERROR".encode())
 
     client_socket.close()
-    print(f"Cliente {client_addr} desconectado.\n")
+    print(f"{MAGENTA}Cliente {client_addr} desconectado.{RESET}\n")
+

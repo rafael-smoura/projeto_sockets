@@ -1,14 +1,8 @@
 """
-Servidor UDP – Serviço de Cálculo Remoto
+Servidor UDP – Serviço de Cálculo Remoto (Colorido)
 
 Este servidor implementa o mesmo serviço matemático do servidor TCP, porém
 utilizando o protocolo UDP, que é mais simples e sem conexão.
-
-Sobre o funcionamento:
-
-- Usa UDP (sem conexão, mais rápido, porém sem garantia de entrega).
-- Recebe pacotes contendo operações matemáticas.
-- Processa e envia a resposta diretamente ao cliente, usando o endereço recebido.
 
 Como usar:
 
@@ -23,23 +17,30 @@ O servidor ficará escutando na porta configurada (default: 9999).
 __version__ = "1.0.0"
 __author__ = "Rafael Silva Moura"
 
-
 from socket import AF_INET, SOCK_DGRAM, SOCK_STREAM, socket
 
-calculadora = """
-=== Calculadora Remota ===
+# Códigos de cores ANSI
+RED = "\033[91m"
+GREEN = "\033[92m"
+YELLOW = "\033[93m"
+BLUE = "\033[94m"
+CYAN = "\033[96m"
+RESET = "\033[0m"
+
+calculadora = f"""
+{CYAN}=== Calculadora Remota ==={RESET}
 Escolha a operação matemática:
-1. Soma (+)
-2. Subtração (-)
-3. Multiplicação (*)
-4. Divisão (/)
-5. Sair (Exit)
+{YELLOW}1.{RESET} Soma (+)
+{YELLOW}2.{RESET} Subtração (-)
+{YELLOW}3.{RESET} Multiplicação (*)
+{YELLOW}4.{RESET} Divisão (/)
+{YELLOW}5.{RESET} Sair (Exit)
 """
 
 # Criar socket UDP
 server_port = socket(AF_INET, SOCK_DGRAM)
 server_port.bind(("localhost", 9999))
-print("Servidor UDP iniciado na porta 9999. Registrando no Servidor de Nomes...")
+print(f"{GREEN}Servidor UDP iniciado na porta 9999. Registrando no Servidor de Nomes...{RESET}")
 
 # -----------------------------------------------------
 # REGISTRAR SERVIÇO NO SERVIDOR DE NOMES (TCP)
@@ -52,13 +53,13 @@ try:
     name_server.send(mensagem_registro.encode())
 
     resposta = name_server.recv(1024).decode()
-    print(f"Resposta do Servidor de Nomes: {resposta}")
+    print(f"{BLUE}Resposta do Servidor de Nomes:{RESET} {resposta}")
 
     name_server.close()
 except Exception as e:
-    print("Erro ao registrar no servidor de nomes:", e)
+    print(f"{RED}Erro ao registrar no servidor de nomes:{RESET} {e}")
 
-print("Aguardando clientes UDP...")
+print(f"{GREEN}Aguardando clientes UDP...{RESET}")
 
 # -----------------------------------------------------
 # LOOP PRINCIPAL DO SERVIDOR UDP
@@ -66,7 +67,7 @@ print("Aguardando clientes UDP...")
 while True:
     # Receber qualquer mensagem inicial do cliente para obter o endereço
     msg, client_addr = server_port.recvfrom(1024)
-    print(f"Cliente conectado: {client_addr}")
+    print(f"{CYAN}Cliente conectado:{RESET} {client_addr}")
 
     fim = False
     while not fim:
@@ -81,12 +82,12 @@ while True:
 
         if not fim:
             # Receber primeiro número
-            server_port.sendto("Digite o primeiro número:".encode(), client_addr)
+            server_port.sendto(f"{YELLOW}Digite o primeiro número:{RESET}".encode(), client_addr)
             num1_msg, client_addr = server_port.recvfrom(1024)
             num1 = float(num1_msg.decode())
 
             # Receber segundo número
-            server_port.sendto("Digite o segundo número:".encode(), client_addr)
+            server_port.sendto(f"{YELLOW}Digite o segundo número:{RESET}".encode(), client_addr)
             num2_msg, client_addr = server_port.recvfrom(1024)
             num2 = float(num2_msg.decode())
 
@@ -98,11 +99,11 @@ while True:
             elif escolha == "3":
                 resultado = num1 * num2
             elif escolha == "4":
-                resultado = num1 / num2 if num2 != 0 else "Erro: divisão por zero"
+                resultado = f"{RED}Erro: divisão por zero{RESET}" if num2 == 0 else num1 / num2
             else:
-                resultado = "Escolha inválida"
+                resultado = f"{RED}Escolha inválida{RESET}"
 
             # Enviar resultado
             server_port.sendto(str(resultado).encode(), client_addr)
 
-    print(f"Cliente {client_addr} desconectado.")
+    print(f"{CYAN}Cliente {client_addr} desconectado.{RESET}")

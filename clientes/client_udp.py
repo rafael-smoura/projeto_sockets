@@ -1,14 +1,8 @@
 """
-Cliente UDP – Serviço de Cálculo Remoto
+Cliente UDP – Serviço de Cálculo Remoto (Colorido)
 
 Este cliente envia operações matemáticas para o servidor UDP e recebe a resposta
 imediatamente, sem a necessidade de estabelecer conexão persistente.
-
-Sobre o funcionamento:
-
-- Envia um datagrama UDP com a operação e valores.
-- Aguarda o pacote de resposta do servidor.
-- Exibe o resultado para o usuário.
 
 Como usar:
 
@@ -26,11 +20,21 @@ __author__ = "Rafael Silva Moura"
 from socket import AF_INET, SOCK_DGRAM, SOCK_STREAM, socket
 import time
 
+# Códigos de cores ANSI
+RED = "\033[91m"
+GREEN = "\033[92m"
+YELLOW = "\033[93m"
+BLUE = "\033[94m"
+CYAN = "\033[96m"
+RESET = "\033[0m"
+
 # -------------------------------------------
 # 1) Consulta ao Servidor de Nomes
 # -------------------------------------------
 
 nome_do_servico = "calc_udp"
+
+print(f"{GREEN}Consultando servidor de nomes para o serviço '{nome_do_servico}'...{RESET}")
 
 # conectar ao servidor de nomes via TCP
 ns = socket(AF_INET, SOCK_STREAM)
@@ -44,13 +48,13 @@ resposta = ns.recv(1024).decode()
 ns.close()
 
 if resposta == "NOT_FOUND":
-    print("Serviço não encontrado no servidor de nomes.")
+    print(f"{RED}Serviço não encontrado no servidor de nomes.{RESET}")
     exit()
 
 ip, porta = resposta.split()
 porta = int(porta)
 
-print(f"Conectando ao serviço {nome_do_servico} em {ip}:{porta}...\n")
+print(f"{GREEN}Conectando ao serviço {nome_do_servico} em {ip}:{porta}...{RESET}\n")
 
 # -------------------------------------------
 # 2) Cliente UDP de cálculo
@@ -58,12 +62,12 @@ print(f"Conectando ao serviço {nome_do_servico} em {ip}:{porta}...\n")
 
 cliente = socket(AF_INET, SOCK_DGRAM)
 
-# operação automática 
+# operação automática
 operacao = "1"   # 1. Soma (+) 2. Subtração (-) 3. Multiplicação (*) 4. Divisão (/)
 num1 = "20"
 num2 = "15"
 
-print(f"Iniciando operação automática (20 + 15)...\n")
+print(f"{CYAN}Iniciando operação automática: {num1} + {num2}...{RESET}\n")
 
 # -------------------------------------------
 # 3) Iniciar comunicação UDP
@@ -77,23 +81,27 @@ t_inicio = time.time()
 
 # recebe menu
 menu, _ = cliente.recvfrom(1024)
+print(f"{BLUE}Menu do servidor recebido.{RESET}")
 
 # envia operação (1=soma)
 cliente.sendto(operacao.encode(), (ip, porta))
+print(f"{YELLOW}Operação escolhida: Soma (+){RESET}")
 
 # recebe pedido do primeiro número
 cliente.recvfrom(1024)
 cliente.sendto(num1.encode(), (ip, porta))
+print(f"{YELLOW}Enviado primeiro número: {num1}{RESET}")
 
 # recebe pedido do segundo número
 cliente.recvfrom(1024)
 cliente.sendto(num2.encode(), (ip, porta))
+print(f"{YELLOW}Enviado segundo número: {num2}{RESET}")
 
 # recebe resultado
 resultado, _ = cliente.recvfrom(1024)
 t_fim = time.time()
 
-print("Resultado recebido:", resultado.decode())
-print(f"Tempo total da operação: {t_fim - t_inicio:.6f} segundos\n")
+print(f"{GREEN}Resultado recebido: {resultado.decode()}{RESET}")
+print(f"{CYAN}Tempo total da operação: {t_fim - t_inicio:.6f} segundos{RESET}\n")
 
 cliente.close()
