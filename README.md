@@ -2,6 +2,12 @@
 
 Este projeto implementa uma arquitetura completa de comunicação distribuída utilizando **sockets**, com foco na comparação entre os protocolos **TCP** e **UDP**, incluindo um **Servidor de Nomes** capaz de registrar, gerenciar e disponibilizar serviços automaticamente. O sistema segue rigorosamente o modelo solicitado em atividades acadêmicas avançadas da área de Redes de Computadores.
 
+<img width="1475" height="398" alt="3" src="https://github.com/user-attachments/assets/0c36bbf2-c267-4b26-b012-d4240c6066d8" />
+
+---
+
+<img width="1456" height="512" alt="6" src="https://github.com/user-attachments/assets/6f2c382e-7450-49fc-aef1-c89757099b87" />
+
 ---
 
 # 📂 Estrutura Geral do Projeto
@@ -198,4 +204,5 @@ A arquitetura criada segue rigor acadêmico e pode ser utilizada como base para 
 **Autor:** *Rafael Moura*
 
 **Ano:** 2025
+
 
