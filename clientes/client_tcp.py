@@ -20,9 +20,8 @@ ou
 
 Certifique-se de que o servidor TCP esteja em execução na porta configurada (default: 6666).
 """
-__version__ = "Full"
+__version__ = "1.0.0"
 __author__ = "Rafael Silva Moura"
-__license__ = "Unlicense"
 
 
 from socket import AF_INET, SOCK_STREAM, socket

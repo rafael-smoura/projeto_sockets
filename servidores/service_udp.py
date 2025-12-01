@@ -20,9 +20,8 @@ ou
 
 O servidor ficará escutando na porta configurada (default: 9999).
 """
-__version__ = "Full"
+__version__ = "1.0.0"
 __author__ = "Rafael Silva Moura"
-__license__ = "Unlicense"
 
 
 from socket import AF_INET, SOCK_DGRAM, SOCK_STREAM, socket

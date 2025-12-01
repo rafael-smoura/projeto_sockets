@@ -49,9 +49,8 @@ ou
 O servidor permanecerá ativo aguardando conexões e exibindo no terminal
 cada registro e cada consulta recebida.
 """
-__version__ = "Full"
+__version__ = "1.0.0"
 __author__ = "Rafael Silva Moura"
-__license__ = "Unlicense"
 
 from socket import AF_INET, SOCK_STREAM, socket
 
