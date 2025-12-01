@@ -1,4 +1,31 @@
-from socket import AF_INET, SOCK_DGRAM, socket
+"""
+Servidor UDP – Serviço de Cálculo Remoto
+
+Este servidor implementa o mesmo serviço matemático do servidor TCP, porém
+utilizando o protocolo UDP, que é mais simples e sem conexão.
+
+Sobre o funcionamento:
+
+- Usa UDP (sem conexão, mais rápido, porém sem garantia de entrega).
+- Recebe pacotes contendo operações matemáticas.
+- Processa e envia a resposta diretamente ao cliente, usando o endereço recebido.
+
+Como usar:
+
+    python3 server_udp.py
+ou
+    python server_udp.py
+ou
+    ./server_udp.py
+
+O servidor ficará escutando na porta configurada (default: 9999).
+"""
+__version__ = "Full"
+__author__ = "Rafael Silva Moura"
+__license__ = "Unlicense"
+
+
+from socket import AF_INET, SOCK_DGRAM, SOCK_STREAM, socket
 
 calculadora = """
 === Calculadora Remota ===
@@ -12,9 +39,31 @@ Escolha a operação matemática:
 
 # Criar socket UDP
 server_port = socket(AF_INET, SOCK_DGRAM)
-server_port.bind(("localhost", 1235))
-print("Servidor UDP iniciado. Aguardando clientes...")
+server_port.bind(("localhost", 9999))
+print("Servidor UDP iniciado na porta 9999. Registrando no Servidor de Nomes...")
 
+# -----------------------------------------------------
+# REGISTRAR SERVIÇO NO SERVIDOR DE NOMES (TCP)
+# -----------------------------------------------------
+try:
+    name_server = socket(AF_INET, SOCK_STREAM)
+    name_server.connect(("localhost", 7777))
+
+    mensagem_registro = "calc_udp 127.0.0.1 9999"
+    name_server.send(mensagem_registro.encode())
+
+    resposta = name_server.recv(1024).decode()
+    print(f"Resposta do Servidor de Nomes: {resposta}")
+
+    name_server.close()
+except Exception as e:
+    print("Erro ao registrar no servidor de nomes:", e)
+
+print("Aguardando clientes UDP...")
+
+# -----------------------------------------------------
+# LOOP PRINCIPAL DO SERVIDOR UDP
+# -----------------------------------------------------
 while True:
     # Receber qualquer mensagem inicial do cliente para obter o endereço
     msg, client_addr = server_port.recvfrom(1024)
@@ -29,7 +78,6 @@ while True:
         escolha_msg, client_addr = server_port.recvfrom(1024)
         escolha = escolha_msg.decode()
 
-        # Verificar se é opção de sair
         fim = (escolha == "5")
 
         if not fim:
@@ -51,10 +99,7 @@ while True:
             elif escolha == "3":
                 resultado = num1 * num2
             elif escolha == "4":
-                if num2 != 0:
-                    resultado = num1 / num2
-                else:
-                    resultado = "Erro: divisão por zero"
+                resultado = num1 / num2 if num2 != 0 else "Erro: divisão por zero"
             else:
                 resultado = "Escolha inválida"
 
