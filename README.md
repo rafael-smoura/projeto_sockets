@@ -25,7 +25,7 @@ Projeto-Sockets/
 │   ├── client_udp.py
 │   └── client_notfound.py
 │
-├── documentos/
+├── arquivos/
 │   ├── capturas_wireshark    
 │   ├── fluxograma.pdf
 │   ├── relatorio.pdf
@@ -205,6 +205,7 @@ A arquitetura criada segue rigor acadêmico e pode ser utilizada como base para 
 **Autor:** *Rafael Moura*
 
 **Ano:** 2025
+
 
 
 
