@@ -59,7 +59,7 @@ print(f"Conectando ao serviço {nome_do_servico} em {ip}:{porta}...\n")
 cliente = socket(AF_INET, SOCK_DGRAM)
 
 # operação automática 
-operacao = "1"   # soma
+operacao = "1"   # 1. Soma (+) 2. Subtração (-) 3. Multiplicação (*) 4. Divisão (/)
 num1 = "20"
 num2 = "15"
 

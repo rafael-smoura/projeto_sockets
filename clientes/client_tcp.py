@@ -61,7 +61,7 @@ cliente = socket(AF_INET, SOCK_STREAM)
 cliente.connect((ip, porta))
 
 # operação automática
-operacao = "1"   # soma
+operacao = "1"   # 1. Soma (+) 2. Subtração (-) 3. Multiplicação (*) 4. Divisão (/)
 num1 = "20"
 num2 = "15"
 
