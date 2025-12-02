@@ -184,6 +184,8 @@ python clientes/client_notfound.py
 O projeto inclui:
 
 * UML de sequência completo
+* Fluxograma
+* Relatório
 
 ---
 
@@ -205,6 +207,7 @@ A arquitetura criada segue rigor acadêmico e pode ser utilizada como base para 
 **Autor:** *Rafael Moura*
 
 **Ano:** 2025
+
 
 
 
